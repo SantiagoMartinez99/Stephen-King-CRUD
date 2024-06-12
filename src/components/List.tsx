@@ -20,7 +20,6 @@ function List({ data, dataType }: BooksProps) {
 
   const handleDeleteBook = (id: number) => {
     dispatch(deleteBook(id));
-    console.log(data);
   };
 
   const handleEditBook = (book: Book) => {
@@ -93,6 +92,7 @@ function List({ data, dataType }: BooksProps) {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
+        <b className="flex">Search by:</b>
       </div>
       <div className="my-12  h-96 overflow-y-scroll">
         {filteredData.map((item, index) => (
