@@ -24,3 +24,10 @@ export interface Villain {
   status: string;
   created_at: string;
 }
+
+export interface FormData {
+  username: string;
+  password: string;
+}
+
+

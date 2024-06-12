@@ -1,22 +1,20 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import Login from "./pages/Login";
 import {
   useGetBooksQuery,
   useGetShortsQuery,
   useGetVillainsQuery,
-} from "./redux/services/apiService";
+} from "../redux/services/apiService";
 import {
   reloadDataBooks,
   reloadDataShorts,
   reloadDataVillains,
-} from "./redux/slices/book.slice";
-import { RootState } from "./redux/store";
-import Home from "./pages/Home";
-function App() {
-  const isAuth = useSelector((state: RootState) => state.authReducer.isAuth);
-  console.log(isAuth);
+} from "../redux/slices/book.slice";
+import { RootState } from "../redux/store";
+import List from "../components/List";
+import Header from "../components/Header";
+function Home() {
+  const isAuth = useSelector((state: RootState) => state.authReducer);
   const dispatch = useDispatch();
 
   const { data: books } = useGetBooksQuery();
@@ -46,16 +44,13 @@ function App() {
   }, [villains, dispatch]);
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path="/"
-          element={isAuth ? <Home /> : <Navigate to="/login" />}
-        />
-        <Route path="/login" element={<Login />} />
-      </Routes>
-    </BrowserRouter>
+    <>
+      <Header />
+      <List data={booksState} dataType="Books" />
+      <List data={shortsState} dataType="Shorts" />
+      <List data={villainsState} dataType="Villains" />
+    </>
   );
 }
 
-export default App;
+export default Home;

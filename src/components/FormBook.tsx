@@ -1,19 +1,63 @@
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import React, { useState, useEffect } from "react";
+import { addBook, updateBook } from "../redux/slices/book.slice";
+import { useDispatch, useSelector } from "react-redux";
+import { Book } from "../types";
+import { RootState } from "../redux/store";
 
 type FormBookProps = {
   onClose: () => void;
+  book: Book | null;
 };
 
-function FormBook({ onClose }: FormBookProps) {
+function FormBook({ onClose, book }: FormBookProps) {
   const [title, setTitle] = useState("");
-  const [year, setYear] = useState("");
+  const [year, setYear] = useState(0);
   const [publisher, setPublisher] = useState("");
   const [isbn, setIsbn] = useState("");
-  const [pages, setPages] = useState("");
+  const [pages, setPages] = useState(0);
+  const dispatch = useDispatch();
+  const books = useSelector((state: RootState) => state.books.books);
+
+  useEffect(() => {
+    if (book) {
+      setTitle(book.Title || "");
+      setYear(book.Year || 0);
+      setPublisher(book.Publisher || "");
+      setIsbn(book.ISBN || "");
+      setPages(book.Pages || 0);
+    }
+  }, [book]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (book && book.id) {
+      const updatedBook: Book = {
+        ...book,
+        Title: title,
+        Year: year,
+        Publisher: publisher,
+        ISBN: isbn,
+        Pages: pages,
+      };
+
+      dispatch(updateBook(updatedBook));
+    } else {
+      // Si el libro no tiene un ID, es una operación de agregación
+      const newId =
+        books.length > 0 ? Math.max(...books.map((book) => book.id)) + 1 : 1;
+      const newBook: Book = {
+        id: newId,
+        Title: title,
+        Year: year,
+        Publisher: publisher,
+        ISBN: isbn,
+        Pages: pages,
+        created_at: new Date().toISOString(),
+      };
+
+      dispatch(addBook(newBook));
+    }
+
     onClose();
   };
 
@@ -33,7 +77,10 @@ function FormBook({ onClose }: FormBookProps) {
           >
             ×
           </button>
-          <h2 className="font-black text-3xl text-center pt-4">Add Book</h2>
+          <h2 className="font-black text-3xl text-center pt-4">
+            {" "}
+            {book ? "Edit Book" : "Add Book"}
+          </h2>
           <form
             className="bg-white shadow-md rounded-lg py-10 px-5 mb-10"
             onSubmit={handleSubmit}
@@ -63,7 +110,7 @@ function FormBook({ onClose }: FormBookProps) {
                 type="number"
                 placeholder="Year"
                 value={year}
-                onChange={(e) => setYear(e.target.value)}
+                onChange={(e) => setYear(Number(e.target.value))}
               />
             </div>
 
@@ -107,7 +154,7 @@ function FormBook({ onClose }: FormBookProps) {
                 placeholder="Pages"
                 type="number"
                 value={pages}
-                onChange={(e) => setPages(e.target.value)}
+                onChange={(e) => setPages(Number(e.target.value))}
               />
             </div>
 

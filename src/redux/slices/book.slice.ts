@@ -1,8 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { RootState } from "../store";
+import { createSlice } from "@reduxjs/toolkit";
 import { Book, Short, Villain } from "../../types";
-import { useGetBooksQuery, useGetShortsQuery } from "../services/apiService";
 
 interface BookState {
   books: Book[];
@@ -39,6 +37,7 @@ const bookSlice = createSlice({
       if (index !== -1) {
         state.books[index] = action.payload;
       }
+      console.log(state.books);
     },
     deleteBook: (state, action: PayloadAction<number>) => {
       const updatedBooks = state.books.slice();
