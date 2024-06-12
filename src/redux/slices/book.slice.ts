@@ -1,85 +1,83 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../store";
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { Book, Short, Villain } from "../../types";
 
-export interface Book {
-  id: number;
-  Title: string;
-  Year: number;
-  Publisher: string;
-  ISBN: string;
-  Pages: number;
-  created_at: string;
+interface BookState {
+  books: Book[];
+  shorts: Short[];
+  villains: Villain[];
 }
 
-export interface Short {
-  id: number;
-  title: string;
-  originallyPublishedIn: string;
-  collectedIn: string;
-  year: number;
-  created_at: string;
-}
+const initialState: BookState = {
+  books: [],
+  shorts: [],
+  villains: [],
+};
 
-export interface Villain {
-  id: number;
-  name: string;
-  gender: string;
-  status: string;
-  created_at: string;
-}
-
-export const stephenKingApi = createApi({
-  reducerPath: "stephenKingApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "https://stephen-king-api.onrender.com/api",
-  }),
-  endpoints: (builder) => ({
-    getBooks: builder.query<Book[], void>({
-      query: () => "/books",
-      transformResponse: (response: { data: Book[] }) => response.data,
-    }),
-    getBookById: builder.query<Book, number>({
-      query: (id) => `/book/${id}`,
-    }),
-    getShorts: builder.query<Short[], void>({
-      query: () => "/shorts",
-      transformResponse: (response: { data: Short[] }) => response.data,
-    }),
-    getShortById: builder.query<any, number>({
-      query: (id) => `/short/${id}`,
-    }),
-    getVillains: builder.query<Villain[], void>({
-      query: () => "/villains",
-      transformResponse: (response: { data: Villain[] }) => response.data,
-    }),
-    getVillainById: builder.query<Villain, number>({
-      query: (id) => `/villain/${id}`,
-    }),
-  }),
-});
-
-export const googleSearchApi = createApi({
-  reducerPath: "googleSearchApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "https://serpapi.com", // URL base para la búsqueda de imágenes
-  }),
-  endpoints: (builder) => ({
-    searchImagesForBook: builder.query<string[], string>({
-      query: (bookTitle) => `/search.json?engine=google_images&q=${bookTitle}`,
-      transformResponse: (response: { images: string[] }) => response.images,
-    }),
-  }),
+const bookSlice = createSlice({
+  name: "books",
+  initialState,
+  reducers: {
+    addBook: (state, action: PayloadAction<Book>) => {
+      state.books.push(action.payload);
+    },
+    updateBook: (state, action: PayloadAction<Book>) => {
+      const index = state.books.findIndex(
+        (book) => book.id === action.payload.id
+      );
+      if (index !== -1) {
+        state.books[index] = action.payload;
+      }
+    },
+    deleteBook: (state, action: PayloadAction<number>) => {
+      state.books = state.books.filter((book) => book.id !== action.payload);
+    },
+    addShort: (state, action: PayloadAction<Short>) => {
+      state.shorts.push(action.payload);
+    },
+    updateShort: (state, action: PayloadAction<Short>) => {
+      const index = state.shorts.findIndex(
+        (short) => short.id === action.payload.id
+      );
+      if (index !== -1) {
+        state.shorts[index] = action.payload;
+      }
+    },
+    deleteShort: (state, action: PayloadAction<number>) => {
+      state.shorts = state.shorts.filter(
+        (short) => short.id !== action.payload
+      );
+    },
+    addVillain: (state, action: PayloadAction<Villain>) => {
+      state.villains.push(action.payload);
+    },
+    updateVillain: (state, action: PayloadAction<Villain>) => {
+      const index = state.villains.findIndex(
+        (villain) => villain.id === action.payload.id
+      );
+      if (index !== -1) {
+        state.villains[index] = action.payload;
+      }
+    },
+    deleteVillain: (state, action: PayloadAction<number>) => {
+      state.villains = state.villains.filter(
+        (villain) => villain.id !== action.payload
+      );
+    },
+  },
 });
 
 export const {
-  useGetBooksQuery,
-  useGetBookByIdQuery,
-  useGetShortsQuery,
-  useGetShortByIdQuery,
-  useGetVillainsQuery,
-  useGetVillainByIdQuery,
-} = stephenKingApi;
+  addBook,
+  updateBook,
+  deleteBook,
+  addShort,
+  updateShort,
+  deleteShort,
+  addVillain,
+  updateVillain,
+  deleteVillain,
+} = bookSlice.actions;
 
-export const { useSearchImagesForBookQuery } = googleSearchApi;
+export default bookSlice.reducer;

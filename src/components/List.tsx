@@ -1,4 +1,4 @@
-import { Book, Short, Villain } from "../redux/slices/book.slice";
+import { Book, Short, Villain } from "../types";
 import { useState } from "react";
 import FormBook from "./FormBook";
 

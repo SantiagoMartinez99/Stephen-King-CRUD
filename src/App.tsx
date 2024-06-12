@@ -3,8 +3,7 @@ import {
   useGetBooksQuery,
   useGetShortsQuery,
   useGetVillainByIdQuery,
-  useGetVillainsQuery,
-} from "./redux/slices/book.slice";
+  useGetVillainsQuery} from "./redux/services/apiService"
 import Books from "./components/List";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
