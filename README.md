@@ -12,6 +12,11 @@ Stephen King CRUD App es una aplicación web que permite realizar operaciones CR
 
 ## Requisitos previos
 
+#DATOS PARA EL LOGIN :
+  password: "root0000",
+  username: "admin@enmedio.com",
+
+
 Antes de comenzar, asegúrate de tener instalados los siguientes programas:
 
 - Node.js (versión 14 o superior)
