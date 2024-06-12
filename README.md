@@ -21,7 +21,7 @@ Antes de comenzar, asegúrate de tener instalados los siguientes programas:
 
 Sigue estos pasos para configurar el proyecto en tu máquina local:
 
-1. Clona el repositorio:  git clone https://github.com/tu-usuario/stephen-king-crud.git
+1. Clona el repositorio:  git clone https://github.com/SantiagoMartinez99/stephen-king-crud.git
 2. Navega al directorio del proyecto: cd stephen-king-crud
 3. Instala las dependencias: npm install
 
