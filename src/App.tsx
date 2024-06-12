@@ -7,6 +7,9 @@ import {
 } from "./redux/slices/book.slice";
 import Books from "./components/List";
 import Header from "./components/Header";
+import Hero from "./components/Hero";
+import Login from "./components/Login";
+import FormBook from "./components/FormBook";
 function App() {
   const {
     data: books,
@@ -40,11 +43,13 @@ function App() {
 
   return (
     <>
-    <Header/>
-      <h1 className="text-center">STEPHEN KING WIKI</h1>
+      {/* <Login></Login> */}
+      <Header />
+      {/* <Hero /> */}
       <Books data={books} dataType="Books" />
       {shorts && <Books data={shorts} dataType="Shorts" />}
-      {villains && <Books data={villains} dataType="Villain" />}
+      {villains && <Books data={villains} dataType="Villains" />}
+
     </>
   );
 }

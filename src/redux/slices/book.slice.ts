@@ -60,6 +60,19 @@ export const stephenKingApi = createApi({
   }),
 });
 
+export const googleSearchApi = createApi({
+  reducerPath: "googleSearchApi",
+  baseQuery: fetchBaseQuery({
+    baseUrl: "https://serpapi.com", // URL base para la búsqueda de imágenes
+  }),
+  endpoints: (builder) => ({
+    searchImagesForBook: builder.query<string[], string>({
+      query: (bookTitle) => `/search.json?engine=google_images&q=${bookTitle}`,
+      transformResponse: (response: { images: string[] }) => response.images,
+    }),
+  }),
+});
+
 export const {
   useGetBooksQuery,
   useGetBookByIdQuery,
@@ -68,3 +81,5 @@ export const {
   useGetVillainsQuery,
   useGetVillainByIdQuery,
 } = stephenKingApi;
+
+export const { useSearchImagesForBookQuery } = googleSearchApi;

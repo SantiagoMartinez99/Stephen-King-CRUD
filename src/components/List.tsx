@@ -1,4 +1,6 @@
 import { Book, Short, Villain } from "../redux/slices/book.slice";
+import { useState } from "react";
+import FormBook from "./FormBook";
 
 type DataType = Book | Short | Villain;
 
@@ -8,16 +10,26 @@ type BooksProps = {
 };
 
 function List({ data, dataType }: BooksProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const renderItemDetails = (item: DataType) => {
     switch (dataType) {
       case "Books":
         return (
           <>
             <h2 className="text-xl font-bold">{(item as Book).Title}</h2>
-            <p>{(item as Book).Year}</p>
-            <p>{(item as Book).Publisher}</p>
-            <p>{(item as Book).ISBN}</p>
-            <p>{(item as Book).Pages}</p>
+            <p>
+              <b>Year:</b> {(item as Book).Year}
+            </p>
+            <p>
+              <b>Publisher:</b> {(item as Book).Publisher}
+            </p>
+            <p>
+              <b>ISBN:</b> {(item as Book).ISBN}
+            </p>
+            <p>
+              <b>Pages:</b> {(item as Book).Pages}
+            </p>
           </>
         );
       case "Shorts":
@@ -30,7 +42,7 @@ function List({ data, dataType }: BooksProps) {
             <p>{(item as Short).year}</p>
           </>
         );
-      case "Villain":
+      case "Villains":
         return (
           <>
             <h2 className="text-xl font-bold">{(item as Villain).name}</h2>
@@ -44,38 +56,52 @@ function List({ data, dataType }: BooksProps) {
   };
 
   return (
-    <>
-      <div className="mx-10 gap-4 flex flex-col ">
+    <section className=" px-10">
+      <h1 className="text-4xl font-bold pt-24 text-center">{dataType}</h1>
+
+      <div className="flex flex-row-reverse align-bottom gap-4 items-center">
         <select className="block appearance-none w-1/6 bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
-          <option>--Seleccione una opción--</option>
-          <option>Libros</option>
-          <option>Cuentos</option>
+          <option>--Select an option--</option>
+          <option>Recent</option>
+          <option>A-Z</option>
         </select>
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-1/6">
-          Agregar nuevo libro
+        <b className="flex">Filter by:</b>
+        <div className="relative">
+          <input
+            type="search"
+            className="w-full rounded border border-solid border-grey-200 bg-transparent  px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-surface outline-none placeholder:text-neutral-500 focus:z-[3] focus:border-primary focus:shadow-inset focus:outline-none motion-reduce:transition-none "
+            placeholder="Search"
+            aria-label="Search"
+          />
+        </div>
+      </div>
+      <div className="my-12 border  border-blue-500 h-96 overflow-y-scroll">
+        {data.map((item, index) => (
+          <div key={index} className="container flex-column p-5 border">
+            {renderItemDetails(item)}
+            <div className="flex gap-3 my-2">
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Editar
+              </button>
+              <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                Eliminar
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="flex flex-row-reverse">
+        <button
+          onClick={() => setIsModalOpen(true)}
+          data-modal-target="default-modal"
+          data-modal-toggle="default-modal"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 mb-5 px-4 rounded w-1/6 self-end"
+        >
+          Add {dataType}
         </button>
       </div>
-      <div className="m-10 overflow-y-scroll h-96">
-        <article className="container grid grid-cols-3 gap-5 w-full">
-          {data.map((item, index) => (
-            <div
-              key={index}
-              className="container flex-column p-5 border border-orange-500"
-            >
-              {renderItemDetails(item)}
-              <div className="flex gap-3 my-2">
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                  Editar
-                </button>
-                <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                  Eliminar
-                </button>
-              </div>
-            </div>
-          ))}
-        </article>
-      </div>
-    </>
+      {isModalOpen && <FormBook onClose={() => setIsModalOpen(false)} />}
+    </section>
   );
 }
 
