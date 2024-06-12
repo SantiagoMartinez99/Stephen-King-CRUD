@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../store";
 import { Book, Short, Villain } from "../../types";
+import { useGetBooksQuery, useGetShortsQuery } from "../services/apiService";
 
 interface BookState {
   books: Book[];
@@ -19,6 +20,15 @@ const bookSlice = createSlice({
   name: "books",
   initialState,
   reducers: {
+    reloadDataBooks: (state, action: PayloadAction<Book[]>) => {
+      state.books = action.payload;
+    },
+    reloadDataShorts: (state, action: PayloadAction<Short[]>) => {
+      state.shorts = action.payload;
+    },
+    reloadDataVillains: (state, action: PayloadAction<Villain[]>) => {
+      state.villains = action.payload;
+    },
     addBook: (state, action: PayloadAction<Book>) => {
       state.books.push(action.payload);
     },
@@ -31,7 +41,16 @@ const bookSlice = createSlice({
       }
     },
     deleteBook: (state, action: PayloadAction<number>) => {
-      state.books = state.books.filter((book) => book.id !== action.payload);
+      const updatedBooks = state.books.slice();
+
+      const indexToRemove = updatedBooks.findIndex(
+        (book) => book.id === action.payload
+      );
+      if (indexToRemove !== -1) {
+        updatedBooks.splice(indexToRemove, 1);
+      }
+
+      state.books = updatedBooks;
     },
     addShort: (state, action: PayloadAction<Short>) => {
       state.shorts.push(action.payload);
@@ -69,6 +88,9 @@ const bookSlice = createSlice({
 });
 
 export const {
+  reloadDataBooks,
+  reloadDataShorts,
+  reloadDataVillains,
   addBook,
   updateBook,
   deleteBook,

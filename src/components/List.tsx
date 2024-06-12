@@ -1,6 +1,8 @@
 import { Book, Short, Villain } from "../types";
 import { useState } from "react";
 import FormBook from "./FormBook";
+import { deleteBook } from "../redux/slices/book.slice";
+import { useDispatch } from "react-redux";
 
 type DataType = Book | Short | Villain;
 
@@ -11,6 +13,12 @@ type BooksProps = {
 
 function List({ data, dataType }: BooksProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const dispatch = useDispatch();
+
+  const handleDeleteBook = (id: number) => {
+    dispatch(deleteBook(id));
+    console.log(data)
+  };
 
   const renderItemDetails = (item: DataType) => {
     switch (dataType) {
@@ -81,10 +89,13 @@ function List({ data, dataType }: BooksProps) {
             {renderItemDetails(item)}
             <div className="flex gap-3 my-2">
               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                Editar
+                Edit
               </button>
-              <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                Eliminar
+              <button
+                onClick={(e) => handleDeleteBook(item.id)}
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Delete
               </button>
             </div>
           </div>

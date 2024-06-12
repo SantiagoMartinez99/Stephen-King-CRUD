@@ -1,14 +1,18 @@
-import { useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import Header from "./components/Header";
+import Books from "./components/List";
 import {
   useGetBooksQuery,
   useGetShortsQuery,
-  useGetVillainByIdQuery,
-  useGetVillainsQuery} from "./redux/services/apiService"
-import Books from "./components/List";
-import Header from "./components/Header";
-import Hero from "./components/Hero";
-import Login from "./components/Login";
-import FormBook from "./components/FormBook";
+  useGetVillainsQuery,
+} from "./redux/services/apiService";
+import {
+  reloadDataBooks,
+  reloadDataShorts,
+  reloadDataVillains,
+} from "./redux/slices/book.slice";
+import { RootState } from "./redux/store";
 function App() {
   const {
     data: books,
@@ -25,6 +29,29 @@ function App() {
     error: villainsError,
     isLoading: villainsIsLoading,
   } = useGetVillainsQuery();
+  const dispatch = useDispatch();
+
+  const booksState = useSelector((state: RootState) => state.books);
+  const shortsState = useSelector((state: RootState) => state.shorts);
+  const villainsState = useSelector((state: RootState) => state.villains);
+
+  useEffect(() => {
+    if (books) {
+      dispatch(reloadDataBooks(books||[]));
+    }
+  }, [books]);
+
+  useEffect(() => {
+    if (shorts) {
+      dispatch(reloadDataShorts(shorts||[]));
+    }
+  }, [shorts]);
+
+  useEffect(() => {
+    if (shorts) {
+      dispatch(reloadDataVillains(villains||[]));
+    }
+  }, [villains]);
 
   if (booksError) {
     console.error("Error fetching books:", booksError);
@@ -45,10 +72,9 @@ function App() {
       {/* <Login></Login> */}
       <Header />
       {/* <Hero /> */}
-      <Books data={books} dataType="Books" />
+      <Books data={booksState.books} dataType="Books" />
       {shorts && <Books data={shorts} dataType="Shorts" />}
       {villains && <Books data={villains} dataType="Villains" />}
-
     </>
   );
 }

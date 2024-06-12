@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Book,Short,Villain } from "../../types";
-
+import { Book, Short, Villain } from "../../types";
 
 export const stephenKingApi = createApi({
   reducerPath: "stephenKingApi",
